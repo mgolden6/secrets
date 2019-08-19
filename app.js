@@ -1,10 +1,11 @@
 //jshint esversion:6
 //require modules
+require('dotenv').config();
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const encrypt = require("mongoose-encryption");
+const mongoose = require("mongoose");
 
 //configure express
 const port = 3000;
@@ -36,6 +37,12 @@ const userSchema = new mongoose.Schema({
     password: String
 });
 
+//configure encryption (LEVEL 2: Encryption + Environment Variables)
+userSchema.plugin(encrypt, {
+    secret: process.env.SECRET_STRING,
+    encryptedFields: ["password"]
+});
+
 //compile schema into a model
 const User = mongoose.model("User", userSchema);
 
@@ -53,13 +60,13 @@ app.get("/register", function (req, res) {
 });
 
 //post routes
-//register a new user
+//register a new user (LEVEL 1: User Name & Password)
 app.post("/register", function (req, res) {
     const newUser = new User({
         email: req.body.username,
         password: req.body.password
     });
-    newUser.save(function(err){
+    newUser.save(function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -70,9 +77,9 @@ app.post("/register", function (req, res) {
 
 //check credentials and login
 app.post("/login", function (req, res) {
-    User.findOne({email: req.body.username}, function (err, foundUser){
+    User.findOne({ email: req.body.username }, function (err, foundUser) {
         if (err) {
-            console.log(err);            
+            console.log(err);
         } else {
             if (foundUser) {
                 if (foundUser.password === req.body.password) {
