@@ -6,7 +6,10 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 //replace LEVEL 2 (Encryption) with LEVEL 3 (md5 Hashing)
 // const encrypt = require("mongoose-encryption");
-const md5 = require("md5");
+//replace LEVEL 3 (md5 hashing) with LEVEL 4 (bcrypt's Salting & better Hashing)
+// const md5 = require("md5");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const mongoose = require("mongoose");
 
 //configure express
@@ -64,16 +67,23 @@ app.get("/register", function (req, res) {
 //post routes
 //register a new user (LEVEL 1: User Name & Password)
 app.post("/register", function (req, res) {
-    const newUser = new User({
-        email: req.body.username,
-        //LEVEL 3 (@ Register): use md5 to Hash the password
-        password: md5(req.body.password)
-    });
-    newUser.save(function (err) {
+    //LEVEL 4: Salting & Hashing with bcrypt
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
         if (err) {
             console.log(err);
         } else {
-            res.render("secrets");
+            const newUser = new User({
+                email: req.body.username,
+                //Replace LEVEL 3 (md5 Hashing) with LEVEL 4 (bcryt hash)
+                password: hash
+            });
+            newUser.save(function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("secrets");
+                }
+            });
         }
     });
 });
@@ -85,18 +95,18 @@ app.post("/login", function (req, res) {
             console.log(err);
         } else {
             if (foundUser) {
-                //LEVEL 3 (@ Login): compare the registration Hash to the login Hash with md5
-                if (foundUser.password === md5(req.body.password)) {
-                    res.render("secrets");
-                }
+                //Replace LEVEL 3 (compare register & login Hash's -w- md5) -w- LEVEL 4 (salt & hash with bcrypt)
+                bcrypt.compare(req.body.password, foundUser.password, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                    } if (result === true) {
+                        res.render("secrets");
+                    }
+                });
             }
         }
     });
 });
-
-
-
-
 
 //test express server
 app.listen(port, function () {
