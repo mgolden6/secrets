@@ -4,7 +4,9 @@ require('dotenv').config();
 const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
-const encrypt = require("mongoose-encryption");
+//replace LEVEL 2 (Encryption) with LEVEL 3 (md5 Hashing)
+// const encrypt = require("mongoose-encryption");
+const md5 = require("md5");
 const mongoose = require("mongoose");
 
 //configure express
@@ -38,10 +40,10 @@ const userSchema = new mongoose.Schema({
 });
 
 //configure encryption (LEVEL 2: Encryption + Environment Variables)
-userSchema.plugin(encrypt, {
-    secret: process.env.SECRET_STRING,
-    encryptedFields: ["password"]
-});
+// userSchema.plugin(encrypt, {
+//     secret: process.env.SECRET_STRING,
+//     encryptedFields: ["password"]
+// });
 
 //compile schema into a model
 const User = mongoose.model("User", userSchema);
@@ -64,7 +66,8 @@ app.get("/register", function (req, res) {
 app.post("/register", function (req, res) {
     const newUser = new User({
         email: req.body.username,
-        password: req.body.password
+        //LEVEL 3 (@ Register): use md5 to Hash the password
+        password: md5(req.body.password)
     });
     newUser.save(function (err) {
         if (err) {
@@ -82,7 +85,8 @@ app.post("/login", function (req, res) {
             console.log(err);
         } else {
             if (foundUser) {
-                if (foundUser.password === req.body.password) {
+                //LEVEL 3 (@ Login): compare the registration Hash to the login Hash with md5
+                if (foundUser.password === md5(req.body.password)) {
                     res.render("secrets");
                 }
             }
