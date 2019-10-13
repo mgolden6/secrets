@@ -11,9 +11,6 @@ const app = express();
 // set up view engine (ejs)
 app.set("view engine", "ejs");
 
-// configure body-parser
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // configure access to local files
 app.use(express.static("public"));
 
