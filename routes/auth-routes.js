@@ -14,10 +14,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // configure mongoose
-// connect to a db
+// connect to a the userDB
 mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
 
-// test db connection
+// test connection to db
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', function () {
@@ -29,12 +29,6 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String
 });
-
-// configure encryption (LEVEL 2: Encryption + Environment Variables)
-// userSchema.plugin(encrypt, {
-//     secret: process.env.SECRET_STRING,
-//     encryptedFields: ["password"]
-// });
 
 // compile schema into a model
 const User = mongoose.model("User", userSchema);
@@ -54,7 +48,6 @@ router.route("/register")
             } else {
                 const newUser = new User({
                     email: req.body.username,
-                    //Replace LEVEL 3 (md5 Hashing) with LEVEL 4 (bcryt hash)
                     password: hash
                 });
                 newUser.save((err) => {
@@ -83,7 +76,6 @@ router.route("/login")
             } else {
                 if (foundUser) {
                     // compare foundUser's entered password vs. stored password
-                    // Replace LEVEL 3 (compare register & login Hash's -w- md5) -w- LEVEL 4 (salt & hash with bcrypt)
                     bcrypt.compare(req.body.password, foundUser.password, (err, result) => {
                         if (err) {
                             console.log(err);
