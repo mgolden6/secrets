@@ -1,17 +1,10 @@
 // jshint esversion:6
 // require modules
 const express = require("express");
-const router = express.Router();
-const bodyParser = require("body-parser");
+const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mongoose = require("mongoose");
-
-// configure express
-const app = express();
-
-// configure body-parser (CAN I JUST USE router.use?)
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // configure mongoose
 // connect to a the userDB
@@ -34,7 +27,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // registration
-router.route("/register")
+authRouter.route("/register")
 
     .get((req, res) => {
         res.render("register");
@@ -62,7 +55,7 @@ router.route("/register")
     });
 
 // login
-router.route("/login")
+authRouter.route("/login")
 
     .get((req, res) => {
         res.render("login");
@@ -89,15 +82,15 @@ router.route("/login")
     });
 
 // auth with google
-router.get("/google", (req, res) => {
+authRouter.get("/google", (req, res) => {
     // handle with passport
     res.send("setup passport to log in with google");
 });
 
-// auth logout
-router.get("/logout", (req, res) => {
+// logout
+authRouter.get("/logout", (req, res) => {
     // handle with passport
     res.send("setup passport to log out");
 });
 
-module.exports = router;
+module.exports = authRouter;

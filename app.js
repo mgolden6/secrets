@@ -3,6 +3,8 @@
 require('dotenv').config();
 const express = require("express");
 const authRoutes = require("./routes/auth-routes");
+const secretRoutes = require("./routes/secret-routes");
+const bodyParser = require("body-parser");
 
 // configure express
 const port = 3000;
@@ -14,25 +16,20 @@ app.set("view engine", "ejs");
 // configure access to local files
 app.use(express.static("public"));
 
-// set up routes
-// reference auth routes
-app.use("/auth", authRoutes);
+// configure body-parser
+app.use(bodyParser.urlencoded({ extended: true }));
 
+// set up routes
 // home
 app.get("/", (req, res) => {
     res.render("home");
 });
 
-// submit
-app.route("/submit")
+// enable auth routes
+app.use("/auth", authRoutes);
 
-    .get((req, res) => {
-        res.render("submit");
-    })
-
-    .post((req, res) => {
-        res.send("finish code to submit a secrete");
-    });
+// enable secret routes
+app.use("/secret", secretRoutes);
 
 // test express server
 app.listen(port, () => {
