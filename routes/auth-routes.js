@@ -6,9 +6,15 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mongoose = require("mongoose");
 
-// configure mongoose
-// connect to a the userDB
-mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
+// configure mongoose for Users
+// name the User database
+const userDB = "userDB";
+
+// connect to the userDB locally...
+// const mongodbURI = "mongodb://localhost:27017/" + userDB;
+// ... OR connect to the userDB via mongoDB.Atlas
+const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
+mongoose.connect(mongodbURI, { useNewUrlParser: true });
 
 // test connection to db
 var db = mongoose.connection;
