@@ -12,6 +12,7 @@ const userDB = "userDB";
 
 // connect to the userDB locally...
 // const mongodbURI = "mongodb://localhost:27017/" + userDB;
+
 // ... OR connect to the userDB via mongoDB.Atlas
 const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
 mongoose.connect(mongodbURI, { useNewUrlParser: true });
