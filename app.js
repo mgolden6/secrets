@@ -7,7 +7,7 @@ const secretRoutes = require("./routes/secret-routes");
 const bodyParser = require("body-parser");
 
 // configure express
-const port = 3000;
+const port = 3000 || process.env.PORT;
 const app = express();
 
 // set up view engine (ejs)
