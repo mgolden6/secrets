@@ -25,10 +25,10 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-// enable auth routes
+// auth
 app.use("/auth", authRoutes);
 
-// enable secret routes
+// secret
 app.use("/secret", secretRoutes);
 
 // test express server

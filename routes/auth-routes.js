@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 // compile schema into a model
 const User = mongoose.model("User", userSchema);
 
-// registration
+// auth: register
 authRouter.route("/register")
 
     .get((req, res) => {
@@ -54,7 +54,7 @@ authRouter.route("/register")
         });
     });
 
-// login
+// auth: login
 authRouter.route("/login")
 
     .get((req, res) => {
@@ -81,13 +81,13 @@ authRouter.route("/login")
         });
     });
 
-// auth with google
+// auth: google
 authRouter.get("/google", (req, res) => {
     // handle with passport
     res.send("setup passport to log in with google");
 });
 
-// logout
+// auth: logout
 authRouter.get("/logout", (req, res) => {
     // handle with passport
     res.send("setup passport to log out");
