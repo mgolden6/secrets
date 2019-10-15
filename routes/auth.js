@@ -9,7 +9,7 @@ const passport = require("passport");
 
 // configure mongoose for Users
 // connect to the userDB with a remote or local URI...
-const dbURI = "mongodb://localhost:27017/" + process.env.USER_DB || "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority" || "mongodb://localhost:27017/" + process.env.USER_DB;
 
 // ... OR connect to the userDB with a mongoDB.Atlas URI
 // const dbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority";
