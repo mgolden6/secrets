@@ -12,10 +12,10 @@ const passport = require("passport");
 const userDB = "userDB";
 
 // connect to the userDB with a local URI...
-const mongodbURI = "mongodb://localhost:27017/" + userDB;
+// const mongodbURI = "mongodb://localhost:27017/" + userDB;
 
 // ... OR connect to the userDB with a mongoDB.Atlas URI
-// const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
+const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
 
 mongoose.connect(mongodbURI, { useNewUrlParser: true });
 
