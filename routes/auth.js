@@ -5,14 +5,12 @@ const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mongoose = require("mongoose");
+const User = require("../models/user");
 const passport = require("passport");
 
 // configure mongoose for Users
-// connect to the userDB with a remote or local URI...
+// connect to the userDB with a remote OR local URI...
 const dbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority" || "mongodb://localhost:27017/" + process.env.USER_DB;
-
-// ... OR connect to the userDB with a mongoDB.Atlas URI
-// const dbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority";
 
 mongoose.connect(dbURI, { useNewUrlParser: true });
 
@@ -22,18 +20,6 @@ db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', function () {
     console.log("mongoose connected @ " + dbURI);
 });
-
-// import models from "../config/models";
-// import models, { connectDB } from "../config/models";
-
-// build schema
-const userSchema = new mongoose.Schema({
-    email: String,
-    password: String
-});
-
-// compile schema into a model
-const User = mongoose.model("User", userSchema);
 
 // auth: REGISTER
 authRouter.route("/register")
@@ -94,6 +80,11 @@ authRouter.route("/login")
 authRouter.get("/google", passport.authenticate("google", {
     scope: ["profile"]
 }));
+
+// callback route from Google to our app
+authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) => {
+    res.send("Google reached our callback URI");
+});
 
 // auth: LOGOUT
 authRouter.get("/logout", (req, res) => {

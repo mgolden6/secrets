@@ -2,6 +2,7 @@
 // require modules
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const User = require("../models/user");
 
 passport.use(new GoogleStrategy({
     // options for the google strategy
@@ -11,11 +12,13 @@ passport.use(new GoogleStrategy({
 },
     (accessToken, refreshToken, profile, cb) => {
         // passport callback function
-        User.findOrCreate({
-            googleID: profile.id
-        },
-            (err, user) => {
-                return cb(err, user);
-            });
+        console.log(profile.id, profile.displayName);
+
+        // User.findOrCreate({
+        //     googleID: profile.id
+        // },
+        //     (err, user) => {
+        //         return cb(err, user);
+        //     });
     }
 ));

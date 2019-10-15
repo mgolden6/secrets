@@ -1,8 +1,8 @@
 // jshint esversion:6
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 // import each model
-import User from "./user";
+const User = require("../models/user");
 
 // combine models into a single object
 const models = {
@@ -23,7 +23,7 @@ const connectDB = () => {
 };
 
 // export the function that connects to the db
-export { connectDB };
+// export { connectDB };
 
 // export all models
-export default models;
+module.exports = models;
