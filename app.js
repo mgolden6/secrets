@@ -2,13 +2,12 @@
 // require modules
 require("dotenv").config();
 const express = require("express");
-const authRoutes = require("./routes/auth-routes");
-const secretRoutes = require("./routes/secret-routes");
-const passportSetup = require("./config/passport-setup");
+const authRoutes = require("./routes/auth");
+const secretRoutes = require("./routes/secret");
+const passportConfig = require("./config/passport");
 const bodyParser = require("body-parser");
 
-// configure express
-const port = process.env.PORT || 3000;
+// create an express instance
 const app = express();
 
 // set up view engine (ejs)
@@ -33,6 +32,6 @@ app.use("/auth", authRoutes);
 app.use("/secret", secretRoutes);
 
 // test express server
-app.listen(port, () => {
-    console.log("Server started on port " + port);
+app.listen(process.env.PORT, () => {
+    console.log("Server started on port " + process.env.PORT);
 });

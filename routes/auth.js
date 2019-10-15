@@ -8,23 +8,23 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 
 // configure mongoose for Users
-// name the User database
-const userDB = "userDB";
-
-// connect to the userDB with a local URI...
-// const mongodbURI = "mongodb://localhost:27017/" + userDB;
+// connect to the userDB with a remote or local URI...
+const dbURI = "mongodb://localhost:27017/" + process.env.USER_DB || "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority";
 
 // ... OR connect to the userDB with a mongoDB.Atlas URI
-const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
+// const dbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + process.env.USER_DB + "?retryWrites=true&w=majority";
 
-mongoose.connect(mongodbURI, { useNewUrlParser: true });
+mongoose.connect(dbURI, { useNewUrlParser: true });
 
 // test connection to db
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, "connection error:"));
 db.once('open', function () {
-    console.log("mongoose connected @ auth-routes.js");
+    console.log("mongoose connected @ " + dbURI);
 });
+
+// import models from "../config/models";
+// import models, { connectDB } from "../config/models";
 
 // build schema
 const userSchema = new mongoose.Schema({
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
 // compile schema into a model
 const User = mongoose.model("User", userSchema);
 
-// auth: register
+// auth: REGISTER
 authRouter.route("/register")
 
     .get((req, res) => {
@@ -63,7 +63,7 @@ authRouter.route("/register")
         });
     });
 
-// auth: login
+// auth: LOGIN
 authRouter.route("/login")
 
     .get((req, res) => {
@@ -90,12 +90,12 @@ authRouter.route("/login")
         });
     });
 
-// auth: google
+// auth: GOOGLE
 authRouter.get("/google", passport.authenticate("google", {
     scope: ["profile"]
 }));
 
-// auth: logout
+// auth: LOGOUT
 authRouter.get("/logout", (req, res) => {
     // handle with passport
     res.send("setup passport to log out");
