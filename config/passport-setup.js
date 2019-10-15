@@ -5,11 +5,11 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.use(new GoogleStrategy({
     // options for the google strategy
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "test"
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/redirect"
 },
-    (accessToken, refreshToken, profile, cd) => {
+    (accessToken, refreshToken, profile, cb) => {
         // passport callback function
         User.findOrCreate({
             googleID: profile.id

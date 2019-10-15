@@ -5,16 +5,18 @@ const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mongoose = require("mongoose");
+const passport = require("passport");
 
 // configure mongoose for Users
 // name the User database
 const userDB = "userDB";
 
-// connect to the userDB locally...
-// const mongodbURI = "mongodb://localhost:27017/" + userDB;
+// connect to the userDB with a local URI...
+const mongodbURI = "mongodb://localhost:27017/" + userDB;
 
-// ... OR connect to the userDB via mongoDB.Atlas
-const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
+// ... OR connect to the userDB with a mongoDB.Atlas URI
+// const mongodbURI = "mongodb+srv://" + process.env.MONGODB_UN + ":" + process.env.MONGODB_PW + "@cluster0-mlepv.mongodb.net/" + userDB + "?retryWrites=true&w=majority";
+
 mongoose.connect(mongodbURI, { useNewUrlParser: true });
 
 // test connection to db
@@ -89,10 +91,9 @@ authRouter.route("/login")
     });
 
 // auth: google
-authRouter.get("/google", (req, res) => {
-    // handle with passport
-    res.send("setup passport to log in with google");
-});
+authRouter.get("/google", passport.authenticate("google", {
+    scope: ["profile"]
+}));
 
 // auth: logout
 authRouter.get("/logout", (req, res) => {

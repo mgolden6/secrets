@@ -1,9 +1,10 @@
 // jshint esversion:6
 // require modules
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const authRoutes = require("./routes/auth-routes");
 const secretRoutes = require("./routes/secret-routes");
+const passportSetup = require("./config/passport-setup");
 const bodyParser = require("body-parser");
 
 // configure express
