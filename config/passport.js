@@ -12,7 +12,10 @@ passport.use(new GoogleStrategy({
 },
     (accessToken, refreshToken, profile, cb) => {
         // passport callback function
-        console.log(profile.id, profile.displayName);
+        console.log(
+            profile.name.givenName,
+            profile.name.familyName
+        );
 
         // User.findOrCreate({
         //     googleID: profile.id

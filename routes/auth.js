@@ -62,7 +62,10 @@ authRouter.route("/login")
 // auth/google
 // STEP1: our initial request to Google via /config/passport.js
 authRouter.get("/google", passport.authenticate("google", {
-    scope: ["profile"]
+    scope: [
+        "email",
+        "profile"
+    ]
 }));
 
 // STEP2: callback route from Google to our app
