@@ -4,6 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const authRoutes = require("./routes/auth");
 const secretRoutes = require("./routes/secret");
+const mongooseConfig = require("./config/mongoose");
 const passportConfig = require("./config/passport");
 const bodyParser = require("body-parser");
 

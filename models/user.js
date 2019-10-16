@@ -1,10 +1,9 @@
 // jshint esversion:6
 const mongoose = require("mongoose");
 
-// build schema
+// build schema for users
 const userSchema = new mongoose.Schema({
     email: String,
-    googleid: String,
     password: String
 });
 
