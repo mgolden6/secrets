@@ -5,7 +5,7 @@ const authRouter = express.Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mongoose = require("mongoose");
-const User = require("../models/user");
+const models = require("../models/index");
 const passport = require("passport");
 
 // auth/register
@@ -14,12 +14,12 @@ authRouter.route("/register")
         res.render("register");
     })
     .post((req, res) => {
-        //LEVEL 4: Salting & Hashing with bcrypt
+        // salt & hash the password immediately
         bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
             if (err) {
                 console.log(err);
             } else {
-                const newUser = new User({
+                const newUser = new models.User({
                     email: req.body.username,
                     password: hash
                 });
@@ -41,7 +41,7 @@ authRouter.route("/login")
     })
     .post((req, res) => {
         // find if the user/email exists
-        User.findOne({ email: req.body.username }, (err, foundUser) => {
+        models.User.findOne({ email: req.body.username }, (err, foundUser) => {
             if (err) {
                 console.log(err);
             } else {
