@@ -20,8 +20,11 @@ authRouter.route("/register")
                 console.log(err);
             } else {
                 const newUser = new models.User({
-                    email: req.body.username,
-                    password: hash
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    email: req.body.email,
+                    password: hash,
+                    reg_method: "ChronicMOBILE"
                 });
                 newUser.save((err) => {
                     if (err) {

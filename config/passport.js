@@ -13,12 +13,19 @@ passport.use(new GoogleStrategy({
     (accessToken, refreshToken, profile, cb) => {
         // passport callback function
         console.log(
-            profile.name.givenName,
-            profile.name.familyName
+            "first_name: " + profile._json.given_name,
+            "last_name: " + profile._json.family_name,
+            "email: " + profile._json.email,
+            "reg_method: " + "Google",
+            "third_party_id: " + profile.id
         );
 
         // User.findOrCreate({
-        //     googleID: profile.id
+        //     first_name: profile._json.given_name,
+        //     last_name: profile._json.family_name,
+        //     email: profile._json.email,
+        //     reg_method: "Google",
+        //     third_party_id: profile.id
         // },
         //     (err, user) => {
         //         return cb(err, user);
