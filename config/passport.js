@@ -12,24 +12,31 @@ passport.use(
         callbackURL: "/auth/google/redirect"
     },
         (accessToken, refreshToken, profile, cb) => {
-            // passport callback function
-            console.log(
-                "first_name: " + profile._json.given_name,
-                "last_name: " + profile._json.family_name,
-                "email: " + profile._json.email,
-                "reg_method: " + "Google",
-                "third_party_id: " + profile.id
-            );
-
-            // models.User.findOrCreate({
-            //     first_name: profile._json.given_name,
-            //     last_name: profile._json.family_name,
-            //     email: profile._json.email,
-            //     reg_method: "Google",
-            //     third_party_id: profile.id
-            // },
-            //     (err, user) => {
-            //         return cb(err, user);
-            //     });
+            // check if user already exists in our db
+            models.User.findOne({
+                third_party_id: profile.id
+            }).then((existingUser) => {
+                if (existingUser) {
+                    // user already exists
+                    console.log("user already exists: " + existingUser);
+                } else {
+                    // if not, save new user
+                    const newUser = new models.User({
+                        first_name: profile._json.given_name,
+                        last_name: profile._json.family_name,
+                        email: profile._json.email,
+                        reg_method: "Google",
+                        third_party_id: profile.id
+                    });
+                    newUser.save((err) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            res.render("secrets");
+                        }
+                    });
+                }
+            });
         }
-    ));
+    )
+);
