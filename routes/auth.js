@@ -22,10 +22,10 @@ authRouter.route("/register")
                 // check if user already exists in our db
                 models.User.findOne({
                     email: req.body.email
-                }).then((existingUser) => {
-                    if (existingUser) {
+                }).then((currentUser) => {
+                    if (currentUser) {
                         // user already exists
-                        console.log("user already exists: " + existingUser);
+                        console.log("user already exists: " + currentUser);
                         // send them to the login page
                         res.render("login");
                     } else {
@@ -58,13 +58,13 @@ authRouter.route("/login")
     })
     .post((req, res) => {
         // find if the user/email exists
-        models.User.findOne({ email: req.body.email }, (err, existingUser) => {
+        models.User.findOne({ email: req.body.email }, (err, currentUser) => {
             if (err) {
                 console.log(err);
             } else {
-                if (existingUser) {
+                if (currentUser) {
                     // user exists, so compare entered password vs stored password
-                    bcrypt.compare(req.body.password, existingUser.password, (err, result) => {
+                    bcrypt.compare(req.body.password, currentUser.password, (err, result) => {
                         if (err) {
                             console.log(err);
                         } if (result === true) {
@@ -86,7 +86,9 @@ authRouter.route("/login")
     });
 
 // auth/google
-// STEP1: our initial request to Google via /config/passport.js
+// STEP1: our initial request to Google when the user selects Google login
+// this bundles the scope below, with our GoogleStrategy in passport.js,
+// STEP2: Google presents the user with who's (client_id) asking for what (scope)
 authRouter.get("/google", passport.authenticate("google", {
     scope: [
         "email",
@@ -94,7 +96,8 @@ authRouter.get("/google", passport.authenticate("google", {
     ]
 }));
 
-// STEP2: callback route from Google to our app
+// STEP3: if user approves, Google responds with a code to our redirect route
+// STEP4: then we send that code back to Google in exchange for information in scope
 authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) => {
     res.send("Google reached our callback URI");
 });

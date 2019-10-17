@@ -4,6 +4,18 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const models = require("../models/index");
 
+// serialize user._id
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+// deserialize user._id
+passport.deserializeUser((id, done) => {
+    models.User.findById(id, (err, user) => {
+        done(err, user);
+    });
+});
+
 passport.use(
     new GoogleStrategy({
         // options for the google strategy
@@ -11,14 +23,19 @@ passport.use(
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "/auth/google/redirect"
     },
-        (accessToken, refreshToken, profile, cb) => {
+        // STEP5: Google responds with scope info in "profile"
+        // STEP6: serialization of -id occurs with "done"
+        (accessToken, refreshToken, profile, done) => {
             // check if user already exists in our db
             models.User.findOne({
+                // in the future consider a membership table:
+                // same email and/or 3rd party ID's accross 3rd parties 
                 third_party_id: profile.id
-            }).then((existingUser) => {
-                if (existingUser) {
+            }).then((currentUser) => {
+                if (currentUser) {
                     // user already exists
-                    console.log("user already exists: " + existingUser);
+                    console.log("user already exists: " + currentUser);
+                    done(null, currentUser);
                 } else {
                     // if not, save new user
                     const newUser = new models.User({
@@ -33,6 +50,7 @@ passport.use(
                             console.log(err);
                         } else {
                             console.log("successfully saved new user: " + newUser);
+                            done(null, newUser);
                         }
                     });
                 }
