@@ -32,7 +32,7 @@ passport.use(
                         if (err) {
                             console.log(err);
                         } else {
-                            res.render("secrets");
+                            console.log("successfully saved new user: " + newUser);
                         }
                     });
                 }
