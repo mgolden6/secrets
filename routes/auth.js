@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const models = require("../models/index");
 const passport = require("passport");
 
-// auth/register
+// register
 authRouter.route("/register")
     .get((req, res) => {
         res.render("register");
@@ -22,43 +22,50 @@ authRouter.route("/register")
                 // check if user already exists in our db
                 models.User.findOne({
                     email: req.body.email
-                }).then((currentUser) => {
-                    if (currentUser) {
-                        // user already exists
-                        console.log("user already exists: " + currentUser);
-                        // send them to the login page
-                        res.render("login");
+                }, (err, currentUser) => {
+                    if (err) {
+                        console.log(err);
                     } else {
-                        //if not, save new user
-                        const newUser = new models.User({
-                            first_name: req.body.first_name,
-                            last_name: req.body.last_name,
-                            email: req.body.email,
-                            password: hash,
-                            reg_method: "ChronicMOBILE"
-                        });
-                        newUser.save((err) => {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                console.log("successfully saved new user: " + newUser);
-                                res.render("secrets");
-                            }
-                        });
+                        if (currentUser) {
+                            // user already exists
+                            console.log("user already exists, please log in");
+                            // send them to the login page
+                            res.render("login");
+                        }
+                        else {
+                            //if not, save new user
+                            const newUser = new models.User({
+                                first_name: req.body.first_name,
+                                last_name: req.body.last_name,
+                                email: req.body.email,
+                                password: hash,
+                                reg_method: "ChronicMOBILE"
+                            });
+                            newUser.save((err) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("successfully saved new user: " + newUser);
+                                    res.render("secrets");
+                                }
+                            });
+                        }
                     }
                 });
             }
         });
     });
 
-// auth/login
+// login
 authRouter.route("/login")
     .get((req, res) => {
         res.render("login");
     })
     .post((req, res) => {
         // find if the user/email exists
-        models.User.findOne({ email: req.body.email }, (err, currentUser) => {
+        models.User.findOne({
+            email: req.body.email
+        }, (err, currentUser) => {
             if (err) {
                 console.log(err);
             } else {
@@ -85,7 +92,7 @@ authRouter.route("/login")
         });
     });
 
-// auth/google
+// google
 // STEP1: our initial request to Google when the user selects Google login
 // this bundles the scope below, with our GoogleStrategy in passport.js,
 // STEP2: Google presents the user with who's (client_id) asking for what (scope)
@@ -99,13 +106,13 @@ authRouter.get("/google", passport.authenticate("google", {
 // STEP3: if user approves, Google responds with a code to our redirect route
 // STEP4: then we send that code back to Google in exchange for information in scope
 authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) => {
-    res.send("Google reached our callback URI");
+    res.render("secrets");
 });
 
-// auth/logout
+// logout
 authRouter.get("/logout", (req, res) => {
     // handle with passport
-    res.send("setup passport to log out");
+    res.redirect("../");
 });
 
 module.exports = authRouter;

@@ -24,7 +24,7 @@ passport.use(
         callbackURL: "/auth/google/redirect"
     },
         // STEP5: Google responds with scope info in "profile"
-        // STEP6: serialization of -id occurs with "done"
+        // STEP6: serialization of _id occurs with "done"
         (accessToken, refreshToken, profile, done) => {
             // check if user already exists in our db
             models.User.findOne({
