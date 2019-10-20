@@ -8,7 +8,9 @@ const secretRouter = express.Router();
 secretRouter.route("/view")
 
     .get((req, res) => {
-        res.render("view");
+        res.render("view", {
+            first_name:req.user.first_name
+        });
     });
 
 // submit secrets

@@ -49,7 +49,6 @@ passport.use(
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log("successfully saved new user: " + newUser.email);
                             done(null, newUser);
                         }
                     });

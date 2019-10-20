@@ -109,7 +109,7 @@ authRouter.get("/google", passport.authenticate("google", {
 // STEP3: if user approves, Google responds with a code to our redirect route
 // STEP4: then we send that code back to Google in exchange for information in scope
 authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) => {
-    res.render("secrets");
+    res.redirect("/secret/view");
 });
 
 // logout
