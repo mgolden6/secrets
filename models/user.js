@@ -14,10 +14,10 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     reg_method: String,
-    third_party_id: String
+    reg_id: String
 });
 
 // compile schema into a model
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 
 module.exports = User;

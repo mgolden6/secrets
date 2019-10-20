@@ -43,13 +43,13 @@ passport.use(
                         last_name: profile._json.family_name,
                         email: profile._json.email,
                         reg_method: "Google",
-                        third_party_id: profile.id
+                        reg_id: profile.id
                     });
                     newUser.save((err) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log("successfully saved new user: " + newUser);
+                            console.log("successfully saved new user: " + newUser.email);
                             done(null, newUser);
                         }
                     });

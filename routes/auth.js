@@ -33,19 +33,23 @@ authRouter.route("/register")
                             res.redirect("login");
                         }
                         else {
-                            //if not, save new user
+                            // if not, create new user
                             const newUser = new models.User({
                                 first_name: req.body.first_name,
                                 last_name: req.body.last_name,
                                 email: req.body.email,
                                 password: hash,
-                                reg_method: "ChronicMOBILE"
+                                reg_method: "ChronicMOBILE",
+                                // use the date (in milliseconds) for our reg_id
+                                reg_id: Date.parse(new Date())
                             });
+                            // then save the new User
                             newUser.save((err) => {
                                 if (err) {
                                     console.log(err);
                                 } else {
                                     console.log("successfully saved new user: " + newUser);
+                                    // then grant newUser access once saved
                                     res.redirect("/secret/view");
                                 }
                             });
@@ -59,7 +63,7 @@ authRouter.route("/register")
 // login
 authRouter.route("/login")
     .get((req, res) => {
-        res.render("login", {login_message:"Log In"});
+        res.render("login", { login_message: "Log In" });
     })
     .post((req, res) => {
         // find if the user/email exists
@@ -79,7 +83,7 @@ authRouter.route("/login")
                             res.redirect("/secret/view");
                         } else {
                             // passwords don't match: try again
-                            res.render("login", {login_message:"Login failed, please try again"});
+                            res.render("login", { login_message: "Login failed, please try again" });
                         }
                     });
                 } else {
