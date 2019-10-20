@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 // set up cookie-session
 app.use(cookieSession({
     // maxAge in millisecons
-    // 1 day = 24 hrs/day * 60 min/hr * 60 sec/hr * 1000 ms/s
+    // 1 day = 24 hrs/day * 60 min/hr * 60 s/min * 1000 ms/s
     maxAge: 24 * 60 * 60 * 1000,
     keys: [process.env.COOKIE_KEY]
 }));

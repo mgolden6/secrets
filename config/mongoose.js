@@ -3,7 +3,7 @@
 const mongoose = require("mongoose");
 
 // try connecting to the userDB locally, then try remote
-const dbURI = process.env.MONGODB_ATLAS_URI || process.env.MONGODB_LOCAL_URI;
+const dbURI = process.env.MONGODB_LOCAL_URI || process.env.MONGODB_ATLAS_URI;
 
 mongoose.connect(dbURI, { useNewUrlParser: true });
 

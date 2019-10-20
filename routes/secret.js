@@ -3,6 +3,14 @@
 const express = require("express");
 const secretRouter = express.Router();
 
+// ADD A secret/view ROUTE
+// view
+secretRouter.route("/view")
+
+    .get((req, res) => {
+        res.render("view");
+    });
+
 // submit
 secretRouter.route("/submit")
 
@@ -11,7 +19,7 @@ secretRouter.route("/submit")
     })
 
     .post((req, res) => {
-        res.send("finish code to submit a secrete");
+        res.redirect("view");
     });
 
 module.exports = secretRouter;

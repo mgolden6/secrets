@@ -30,7 +30,7 @@ authRouter.route("/register")
                             // user already exists
                             console.log("user already exists, please log in");
                             // send them to the login page
-                            res.render("login");
+                            res.redirect("login");
                         }
                         else {
                             //if not, save new user
@@ -46,7 +46,7 @@ authRouter.route("/register")
                                     console.log(err);
                                 } else {
                                     console.log("successfully saved new user: " + newUser);
-                                    res.render("secrets");
+                                    res.redirect("/secret/view");
                                 }
                             });
                         }
@@ -59,7 +59,7 @@ authRouter.route("/register")
 // login
 authRouter.route("/login")
     .get((req, res) => {
-        res.render("login");
+        res.render("login", {login_message:"Log In"});
     })
     .post((req, res) => {
         // find if the user/email exists
@@ -76,17 +76,16 @@ authRouter.route("/login")
                             console.log(err);
                         } if (result === true) {
                             // passwords match: grant access
-                            res.render("secrets");
+                            res.redirect("/secret/view");
                         } else {
                             // passwords don't match: try again
-                            console.log("incorrect password, please try again");
-                            res.render("login");
+                            res.render("login", {login_message:"Login failed, please try again"});
                         }
                     });
                 } else {
                     // user doesn't exist
                     console.log("user doesn't exist, please register");
-                    res.render("register");
+                    res.redirect("register");
                 }
             }
         });
