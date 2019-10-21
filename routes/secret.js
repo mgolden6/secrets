@@ -3,24 +3,33 @@
 const express = require("express");
 const secretRouter = express.Router();
 
+// authorization check
+const authCheck = (req, res, next) => {
+    if (!req.user) {
+        // if user is not logged in
+        res.redirect("/auth/login");
+    } else {
+        // if user is logged in
+        next();
+    }
+};
 
 // view secrets
 secretRouter.route("/view")
-
-    .get((req, res) => {
+    .get(authCheck, (req, res) => {
         res.render("view", {
-            first_name:req.user.first_name
+            first_name: req.user.first_name
         });
     });
 
 // submit secrets
 secretRouter.route("/submit")
-
-    .get((req, res) => {
-        res.render("submit");
+    .get(authCheck, (req, res) => {
+        res.render("submit", {
+            first_name: req.user.first_name
+        });
     })
-
-    .post((req, res) => {
+    .post(authCheck, (req, res) => {
         res.redirect("view");
     });
 
