@@ -49,8 +49,16 @@ authRouter.route("/register")
                                     console.log(err);
                                 } else {
                                     console.log("successfully saved new user: " + newUser);
-                                    // then grant newUser access once saved
-                                    res.redirect("/secret/view");
+
+                                    // log in the new User
+                                    req.login(newUser, (err) => {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            // then grant newUser access once saved & logged in
+                                            res.redirect("/secret/view");
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -66,6 +74,9 @@ authRouter.route("/login")
         res.render("login", { login_message: "Log In" });
     })
     .post((req, res) => {
+
+        console.log("1. Hit login.post route");
+
         // find if the user/email exists
         models.User.findOne({
             email: req.body.email
@@ -74,13 +85,26 @@ authRouter.route("/login")
                 console.log(err);
             } else {
                 if (currentUser) {
+
+                    console.log("2. Found user: " + currentUser.first_name);
+
                     // user exists, so compare entered password vs stored password
                     bcrypt.compare(req.body.password, currentUser.password, (err, result) => {
                         if (err) {
                             console.log(err);
                         } if (result === true) {
                             // passwords match: grant access
-                            res.redirect("/secret/view");
+
+                            console.log("3. Passwords match!");
+
+                            req.login(currentUser, (err) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    res.redirect("/secret/view");
+                                }
+                            });
+
                         } else {
                             // passwords don't match: try again
                             res.render("login", { login_message: "Login failed, please try again" });
@@ -115,6 +139,7 @@ authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) =
 // logout
 authRouter.get("/logout", (req, res) => {
     // handle with passport
+    req.logout();
     res.redirect("../");
 });
 
