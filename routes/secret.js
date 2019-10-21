@@ -5,21 +5,14 @@ const secretRouter = express.Router();
 
 // authorization check
 const authCheck = (req, res, next) => {
-
     console.log("4. Hit authCheck...");
-
-
     if (!req.user) {
         // if user is not logged in
-
         console.log("5-BAD: FAILED authCheck -> rerouting to Login");
-
         res.redirect("/auth/login");
     } else {
         // if user is logged in
-
         console.log("5-GOOD: PASSED authCheck -> proceeding next page");
-
         next();
     }
 };
@@ -39,7 +32,7 @@ secretRouter.route("/submit")
             first_name: req.user.first_name
         });
     })
-    .post(authCheck, (req, res) => {
+    .post((req, res) => {
         res.redirect("view");
     });
 
