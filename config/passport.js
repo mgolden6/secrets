@@ -29,15 +29,15 @@ passport.use(
             // check if user already exists in our db
             models.User.findOne({
                 // in the future consider a membership table:
-                // same email and/or 3rd party ID's accross 3rd parties 
+                // same email with multiple 3rd party ID's, etc. 
                 third_party_id: profile.id
             }).then((currentUser) => {
                 if (currentUser) {
-                    // user already exists
-                    console.log("user already exists: " + currentUser);
+                    // user already exists,
+                    // so serialize, create cookie & log in
                     done(null, currentUser);
                 } else {
-                    // if not, save new user
+                    // if not, create new user
                     const newUser = new models.User({
                         first_name: profile._json.given_name,
                         last_name: profile._json.family_name,
@@ -45,10 +45,12 @@ passport.use(
                         reg_method: "Google",
                         reg_id: profile.id
                     });
+                    // then save new user
                     newUser.save((err) => {
                         if (err) {
                             console.log(err);
                         } else {
+                            // log in the new User
                             done(null, newUser);
                         }
                     });

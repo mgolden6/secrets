@@ -51,7 +51,7 @@ authRouter.route("/register")
                                         if (err) {
                                             console.log(err);
                                         } else {
-                                            // then grant newUser access once saved & logged in
+                                            // grant access once saved & logged in
                                             res.redirect("/secret/view");
                                         }
                                     });
@@ -88,7 +88,7 @@ authRouter.route("/login")
                                 if (err) {
                                     console.log(err);
                                 } else {
-                                    // grant access
+                                    // grant access once logged in
                                     res.redirect("/secret/view");
                                 }
                             });
@@ -119,13 +119,15 @@ authRouter.get("/google", passport.authenticate("google", {
 // STEP3: if user approves, Google responds with a code to our redirect route
 // STEP4: then we send that code back to Google in exchange for information in scope
 authRouter.get("/google/redirect", passport.authenticate("google"), (req, res) => {
+    // grant access once logged in
     res.redirect("/secret/view");
 });
 
 // logout
 authRouter.get("/logout", (req, res) => {
-    // handle with passport
+    // log out with passport
     req.logout();
+    // redirect user to home
     res.redirect("../");
 });
 
