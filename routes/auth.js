@@ -27,9 +27,7 @@ authRouter.route("/register")
                         console.log(err);
                     } else {
                         if (currentUser) {
-                            // user already exists
-                            console.log("user already exists, please log in");
-                            // send them to the login page
+                            // user already exists, send to the login page
                             res.redirect("login");
                         }
                         else {
@@ -48,8 +46,6 @@ authRouter.route("/register")
                                 if (err) {
                                     console.log(err);
                                 } else {
-                                    console.log("successfully saved new user: " + newUser);
-
                                     // log in the new User
                                     req.login(newUser, (err) => {
                                         if (err) {
@@ -74,9 +70,6 @@ authRouter.route("/login")
         res.render("login", { login_message: "Log In" });
     })
     .post((req, res) => {
-
-        console.log("1. Hit login.post route");
-
         // find if the user/email exists
         models.User.findOne({
             email: req.body.email
@@ -85,34 +78,27 @@ authRouter.route("/login")
                 console.log(err);
             } else {
                 if (currentUser) {
-
-                    console.log("2. Found user: " + currentUser.first_name);
-
                     // user exists, so compare entered password vs stored password
                     bcrypt.compare(req.body.password, currentUser.password, (err, result) => {
                         if (err) {
                             console.log(err);
                         } if (result === true) {
-                            // passwords match: grant access
-
-                            console.log("3. Passwords match!");
-
+                            // passwords match: log in
                             req.login(currentUser, (err) => {
                                 if (err) {
                                     console.log(err);
                                 } else {
+                                    // grant access
                                     res.redirect("/secret/view");
                                 }
                             });
-
                         } else {
                             // passwords don't match: try again
                             res.render("login", { login_message: "Login failed, please try again" });
                         }
                     });
                 } else {
-                    // user doesn't exist
-                    console.log("user doesn't exist, please register");
+                    // user doesn't exist: redirect to registration
                     res.redirect("register");
                 }
             }
